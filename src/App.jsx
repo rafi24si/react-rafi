@@ -3,10 +3,11 @@ import "./assets/tailwind.css";
 import Sidebar from "./layouts/Sidebar";
 import Header from "./layouts/Header";
 import PageHeader from "./components/PageHeader";
-import { Routes, Route } from "react-router-dom"  ;
+import { Routes, Route } from "react-router-dom";
 import Customers from "./pages/Customers";
 import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
@@ -24,8 +25,50 @@ function App() {
             <Route path="/orders" element={<Orders />} />
             <Route path="/customers" element={<Customers />} />
 
-            {/* 404 fallback */}
-            <Route path="*" element={<NotFound />} />
+            {/* Error Pages */}
+            <Route
+              path="/400"
+              element={
+                <ErrorPage
+                  code="400"
+                  description="Bad Request. Permintaan tidak valid."
+                  image="/img/400.png"
+                />
+              }
+            />
+
+            <Route
+              path="/401"
+              element={
+                <ErrorPage
+                  code="401"
+                  description="Unauthorized. Silakan login terlebih dahulu."
+                  image="/img/401.png"
+                />
+              }
+            />
+
+            <Route
+              path="/403"
+              element={
+                <ErrorPage
+                  code="403"
+                  description="Forbidden. Kamu tidak punya akses."
+                  image="/img/403.png"
+                />
+              }
+            />
+
+            <Route
+              path="*"
+              element={
+                <ErrorPage
+                  code="404"
+                  description="Page not found."
+                  image="/img/404.png"
+                />
+              }
+            />
           </Routes>
         </div>
       </div>
