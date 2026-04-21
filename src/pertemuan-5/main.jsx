@@ -5,6 +5,8 @@ import "./tailwind.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Dashboard />
+    <div>
+      <Dashboard />
+    </div>
   </React.StrictMode>
 );
