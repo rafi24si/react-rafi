@@ -1,14 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FaThLarge, FaList, FaHeadphones } from "react-icons/fa";
 
 export default function Sidebar() {
-  const location = useLocation();
+  // function untuk styling active
+  const menuClass = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition cursor-pointer
+     ${
+       isActive
+         ? "bg-white shadow-sm font-medium text-gray-800"
+         : "text-gray-500 hover:bg-white hover:shadow-sm"
+     }`;
 
-  const menu = [
-    { name: "Dashboard", path: "/", icon: <FaThLarge /> },
-    { name: "Orders", path: "/orders", icon: <FaList /> },
-    { name: "Customers", path: "/customers", icon: <FaHeadphones /> },
-  ];
+  const iconClass = (isActive) =>
+    `text-lg ${isActive ? "text-gray-700" : "text-gray-400"}`;
 
   return (
     <div className="w-64 h-screen bg-[#F8F9FB] flex flex-col justify-between px-6 py-6">
@@ -23,33 +27,41 @@ export default function Sidebar() {
         </div>
 
         {/* Menu */}
-        <ul className="space-y-3 text-gray-600">
-          {menu.map((item) => {
-            const isActive = location.pathname === item.path;
+        <ul className="space-y-3">
+          
+          <li>
+            <NavLink to="/" end className={menuClass}>
+              {({ isActive }) => (
+                <>
+                  <FaThLarge className={iconClass(isActive)} />
+                  Dashboard
+                </>
+              )}
+            </NavLink>
+          </li>
 
-            return (
-              <li key={item.name}>
-                <Link
-                  to={item.path}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition
-                    ${
-                      isActive
-                        ? "bg-white shadow-sm font-medium text-gray-800"
-                        : "hover:bg-white hover:shadow-sm text-gray-500"
-                    }`}
-                >
-                  <span
-                    className={`text-lg ${
-                      isActive ? "text-gray-700" : "text-gray-400"
-                    }`}
-                  >
-                    {item.icon}
-                  </span>
-                  {item.name}
-                </Link>
-              </li>
-            );
-          })}
+          <li>
+            <NavLink to="/orders" className={menuClass}>
+              {({ isActive }) => (
+                <>
+                  <FaList className={iconClass(isActive)} />
+                  Orders
+                </>
+              )}
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink to="/customers" className={menuClass}>
+              {({ isActive }) => (
+                <>
+                  <FaHeadphones className={iconClass(isActive)} />
+                  Customers
+                </>
+              )}
+            </NavLink>
+          </li>
+
         </ul>
       </div>
 

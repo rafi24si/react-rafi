@@ -11,7 +11,7 @@ import {
   BarChart,
   Bar,
   XAxis,
-  YAxis,
+  YAxis,  
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,

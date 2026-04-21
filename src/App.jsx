@@ -3,9 +3,10 @@ import "./assets/tailwind.css";
 import Sidebar from "./layouts/Sidebar";
 import Header from "./layouts/Header";
 import PageHeader from "./components/PageHeader";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"  ;
 import Customers from "./pages/Customers";
-import Orders from "./pages/Orders"; // kalau sudah ada
+import Orders from "./pages/Orders";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -20,8 +21,11 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/orders" element={<Orders/>} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/customers" element={<Customers />} />
+
+            {/* 404 fallback */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
