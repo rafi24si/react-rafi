@@ -1,31 +1,54 @@
-import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  FaSearch,
+  FaUserPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaEye,
+  FaTrashAlt,
+} from "react-icons/fa";
 
-function TableRow({ name, email, status }) {
+const ITEMS_PER_PAGE = 5;
+
+function LoyaltyBadge({ loyalty }) {
+  const styles =
+    loyalty === "Gold"
+      ? "bg-yellow-100 text-yellow-600"
+      : loyalty === "Silver"
+      ? "bg-gray-200 text-gray-600"
+      : "bg-orange-100 text-orange-600";
+
+  return (
+    <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles}`}>
+      {loyalty}
+    </span>
+  );
+}
+
+function TableRow({ id, name, email, phone, loyalty }) {
   return (
     <tr className="border-t hover:bg-gray-50 transition">
+      <td className="px-6 py-4 text-gray-500">#{id}</td>
+
       <td className="px-6 py-4 font-medium text-gray-800">{name}</td>
+
       <td className="px-6 py-4 text-gray-500">{email}</td>
 
+      <td className="px-6 py-4 text-gray-500">{phone}</td>
+
       <td className="px-6 py-4">
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
-            status === "Active"
-              ? "bg-green-100 text-green-600"
-              : "bg-red-100 text-red-500"
-          }`}
-        >
-          {status}
-        </span>
+        <LoyaltyBadge loyalty={loyalty} />
       </td>
 
       <td className="px-6 py-4">
         <div className="flex gap-3">
-          <button className="text-blue-500 hover:underline text-sm">
-            View
+          <button className="text-blue-500 hover:underline text-sm flex items-center gap-1">
+            <FaEye /> View
           </button>
-          <button className="text-red-500 hover:underline text-sm">
-            Delete
+
+          <button className="text-red-500 hover:underline text-sm flex items-center gap-1">
+            <FaTrashAlt /> Delete
           </button>
         </div>
       </td>
@@ -34,75 +57,117 @@ function TableRow({ name, email, status }) {
 }
 
 export default function Customers() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const data = [
-    { name: "Rafi", email: "rafi@email.com", status: "Active" },
-    { name: "Andi", email: "andi@email.com", status: "Inactive" },
-    { name: "Siti", email: "siti@email.com", status: "Active" },
-    { name: "Budi", email: "budi@email.com", status: "Active" },
-  ];
+  const data = useMemo(() => {
+    return Array.from({ length: 30 }, (_, i) => ({
+      id: i + 1,
+      name: ["Rafi", "Andi", "Siti", "Budi"][i % 4] + " " + (i + 1),
+      email: `user${i + 1}@email.com`,
+      phone: `08123${100000 + i}`,
+      loyalty: ["Bronze", "Silver", "Gold"][i % 3],
+    }));
+  }, []);
 
   const filtered = data.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentData = filtered.slice(start, start + ITEMS_PER_PAGE);
+
   return (
-    <div>
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-5">
+    <div className="p-6">
+
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-xl font-semibold text-gray-800">
-            Customers List
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Customers
           </h1>
           <p className="text-sm text-gray-400">
             Manage your customers data
           </p>
         </div>
 
-        <button className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm shadow hover:bg-green-600 transition">
-          + Add Customer
+        <button
+          onClick={() => navigate("/customers/add")}
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow"
+        >
+          <FaUserPlus /> Add Customer
         </button>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-4 w-80">
+      {/* SEARCH */}
+      <div className="relative mb-5 w-80">
         <input
-          type="text"
           placeholder="Search customer..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="w-full pl-10 pr-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
         />
         <FaSearch className="absolute left-3 top-3 text-gray-400 text-sm" />
       </div>
 
-      {/* Table */}
+      {/* TABLE CARD */}
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 text-gray-500 text-sm">
             <tr>
-              <th className="px-6 py-4 font-medium">Name</th>
-              <th className="px-6 py-4 font-medium">Email</th>
-              <th className="px-6 py-4 font-medium">Status</th>
-              <th className="px-6 py-4 font-medium">Action</th>
+              <th className="px-6 py-4">ID</th>
+              <th className="px-6 py-4">Name</th>
+              <th className="px-6 py-4">Email</th>
+              <th className="px-6 py-4">Phone</th>
+              <th className="px-6 py-4">Loyalty</th>
+              <th className="px-6 py-4">Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {filtered.map((c, i) => (
-              <TableRow key={i} {...c} />
+            {currentData.map((c) => (
+              <TableRow key={c.id} {...c} />
             ))}
 
-            {filtered.length === 0 && (
+            {currentData.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center py-10 text-gray-400">
+                <td colSpan="6" className="text-center py-10 text-gray-400">
                   No customers found
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* PAGINATION */}
+      <div className="flex justify-between items-center mt-5">
+        <p className="text-sm text-gray-500">
+          Page {currentPage} of {totalPages}
+        </p>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setCurrentPage((p) => p - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            <FaChevronLeft />
+          </button>
+
+          <button
+            onClick={() => setCurrentPage((p) => p + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
       </div>
     </div>
   );

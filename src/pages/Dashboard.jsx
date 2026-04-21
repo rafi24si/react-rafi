@@ -11,11 +11,13 @@ import {
   BarChart,
   Bar,
   XAxis,
-  YAxis,  
+  YAxis,
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+
+import { useNavigate } from "react-router-dom";
 
 function Card({ icon, value, label, bg }) {
   return (
@@ -35,6 +37,8 @@ function Card({ icon, value, label, bg }) {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   const chartData = [
     { name: "Jan", orders: 30, revenue: 100 },
     { name: "Feb", orders: 50, revenue: 200 },
@@ -46,6 +50,24 @@ export default function Dashboard() {
 
   return (
     <div>
+
+      {/* 🔥 BUTTON ACTION */}
+      <div className="flex justify-end gap-3 mb-4">
+        <button
+          onClick={() => navigate("/customers/add")}
+          className="bg-blue-500 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-600"
+        >
+          + Add Customer
+        </button>
+
+        <button
+          onClick={() => navigate("/orders/add")}
+          className="bg-green-500 text-white px-4 py-2 rounded-xl shadow hover:bg-green-600"
+        >
+          + Add Order
+        </button>
+      </div>
+
       {/* Cards */}
       <div className="grid grid-cols-4 gap-5 mt-4">
         <Card icon={<FaShoppingCart />} value="75" label="Total Orders" bg="bg-green-500" />

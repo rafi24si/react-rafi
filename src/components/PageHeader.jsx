@@ -2,6 +2,8 @@ export default function PageHeader({
   title,
   breadcrumb = [],
   children,
+  onAdd,        // optional handler
+  addLabel,     // optional button text
 }) {
   return (
     <div className="flex justify-between items-center mb-6">
@@ -34,8 +36,19 @@ export default function PageHeader({
         </div>
       </div>
 
-      {/* Right (Dynamic Button / Content) */}
-      <div>{children}</div>
+      {/* Right */}
+      <div>
+        {children ? (
+          children
+        ) : onAdd ? (
+          <button
+            onClick={onAdd}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-sm text-sm"
+          >
+            {addLabel || "+ Add"}
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }

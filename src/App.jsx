@@ -1,29 +1,38 @@
-import Dashboard from "./pages/Dashboard";
 import "./assets/tailwind.css";
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./layouts/Sidebar";
 import Header from "./layouts/Header";
-import PageHeader from "./components/PageHeader";
-import { Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import Orders from "./pages/Orders";
-import NotFound from "./pages/NotFound";
+import AddCustomer from "./pages/AddCustomer";
+import AddOrder from "./pages/AddOrder";
 import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
     <div className="flex bg-[#F3F4F6] min-h-screen">
+      
+      {/* Sidebar */}
       <Sidebar />
 
+      {/* Main */}
       <div className="flex-1">
         <Header />
 
         <div className="px-6 py-5">
-          <PageHeader />
 
+          {/* ROUTES */}
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/orders" element={<Orders />} />
+
+            {/* Customers */}
             <Route path="/customers" element={<Customers />} />
+            <Route path="/customers/add" element={<AddCustomer />} />
+
+            {/* Orders */}
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders/add" element={<AddOrder />} />
 
             {/* Error Pages */}
             <Route
@@ -59,6 +68,7 @@ function App() {
               }
             />
 
+            {/* 404 fallback */}
             <Route
               path="*"
               element={
@@ -70,6 +80,7 @@ function App() {
               }
             />
           </Routes>
+
         </div>
       </div>
     </div>
