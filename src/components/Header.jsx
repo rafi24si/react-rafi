@@ -21,7 +21,7 @@ export default function Header() {
         <div className="relative bg-blue-100 p-2 rounded-xl cursor-pointer">
           <FaBell className="text-blue-600" />
           <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] px-1.5 rounded-full">
-            50
+            sigit maling sempak
           </span>
         </div>
 
@@ -47,7 +47,7 @@ export default function Header() {
 
           {/* More */}
           <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center text-white cursor-pointer">
-            ...
+            "sigit maling sempak"
           </div>
         </div>
       </div>

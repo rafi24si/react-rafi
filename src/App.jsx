@@ -1,88 +1,81 @@
 import "./assets/tailwind.css";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "./layouts/Sidebar";
-import Header from "./layouts/Header";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import Orders from "./pages/Orders";
 import AddCustomer from "./pages/AddCustomer";
 import AddOrder from "./pages/AddOrder";
 import ErrorPage from "./pages/ErrorPage";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
   return (
     <div className="flex bg-[#F3F4F6] min-h-screen">
-      
-      {/* Sidebar */}
-      <Sidebar />
+      <Routes>
 
-      {/* Main */}
-      <div className="flex-1">
-        <Header />
+        {/* Main Layout */}
+        <Route element={<MainLayout />}>
+          
+          {/* Dashboard */}
+          <Route path="/" element={<Dashboard />} />
 
-        <div className="px-6 py-5">
+          {/* Customers */}
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/add" element={<AddCustomer />} />
 
-          {/* ROUTES */}
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
+          {/* Orders */}
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/add" element={<AddOrder />} />
 
-            {/* Customers */}
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/customers/add" element={<AddCustomer />} />
+          {/* Error Pages */}
+          <Route
+            path="/400"
+            element={
+              <ErrorPage
+                code="400"
+                description="Bad Request. Permintaan tidak valid."
+                image="/img/400.png"
+              />
+            }
+          />
 
-            {/* Orders */}
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/orders/add" element={<AddOrder />} />
+          <Route
+            path="/401"
+            element={
+              <ErrorPage
+                code="401"
+                description="Unauthorized. Silakan login terlebih dahulu."
+                image="/img/401.png"
+              />
+            }
+          />
 
-            {/* Error Pages */}
-            <Route
-              path="/400"
-              element={
-                <ErrorPage
-                  code="400"
-                  description="Bad Request. Permintaan tidak valid."
-                  image="/img/400.png"
-                />
-              }
-            />
+          <Route
+            path="/403"
+            element={
+              <ErrorPage
+                code="403"
+                description="Forbidden. Kamu tidak punya akses."
+                image="/img/403.png"
+              />
+            }
+          />
 
-            <Route
-              path="/401"
-              element={
-                <ErrorPage
-                  code="401"
-                  description="Unauthorized. Silakan login terlebih dahulu."
-                  image="/img/401.png"
-                />
-              }
-            />
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <ErrorPage
+                code="404"
+                description="Page not found."
+                image="/img/404.png"
+              />
+            }
+          />
 
-            <Route
-              path="/403"
-              element={
-                <ErrorPage
-                  code="403"
-                  description="Forbidden. Kamu tidak punya akses."
-                  image="/img/403.png"
-                />
-              }
-            />
+        </Route>
 
-            {/* 404 fallback */}
-            <Route
-              path="*"
-              element={
-                <ErrorPage
-                  code="404"
-                  description="Page not found."
-                  image="/img/404.png"
-                />
-              }
-            />
-          </Routes>
-
-        </div>
-      </div>
+      </Routes>
     </div>
   );
 }
