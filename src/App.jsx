@@ -1,89 +1,55 @@
 import "./assets/tailwind.css";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import Dashboard from "./pages/Dashboard";
-import Customers from "./pages/Customers";
-import Orders from "./pages/Orders";
-import AddCustomer from "./pages/AddCustomer";
-import AddOrder from "./pages/AddOrder";
-import ErrorPage from "./pages/ErrorPage";
+import Loading from "./components/Loading";
 
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Forgot from "./pages/auth/Forgot";
+/* Lazy Pages */
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Customers = lazy(() => import("./pages/Customers"));
+const Orders = lazy(() => import("./pages/Orders"));
+const AddCustomer = lazy(() => import("./pages/AddCustomer"));
+const AddOrder = lazy(() => import("./pages/AddOrder"));
+const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
-import MainLayout from "./layouts/MainLayout";
-import AuthLayout from "./layouts/AuthLayout";
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Forgot = lazy(() => import("./pages/auth/Forgot"));
+
+const MainLayout = lazy(() => import("./layouts/MainLayout"));
+const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
 
 function App() {
   return (
-    <Routes>
+    <Suspense fallback={<Loading />}>
+      <Routes>
 
-      {/* AUTH ROUTES (tanpa sidebar) */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<Forgot />} />
-      </Route>
+        {/* Auth */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot" element={<Forgot />} />
+        </Route>
 
-      {/* MAIN ROUTES (pakai sidebar/header) */}
-      <Route element={<MainLayout />}>
+        {/* Main */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Dashboard />} />
 
-        <Route path="/" element={<Dashboard />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/add" element={<AddCustomer />} />
 
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/customers/add" element={<AddCustomer />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders/add" element={<AddOrder />} />
 
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/orders/add" element={<AddOrder />} />
+          <Route path="/400" element={<ErrorPage code="400" />} />
+          <Route path="/401" element={<ErrorPage code="401" />} />
+          <Route path="/403" element={<ErrorPage code="403" />} />
 
-        <Route
-          path="/400"
-          element={
-            <ErrorPage
-              code="400"
-              description="Bad Request. Permintaan tidak valid."
-              image="/img/400.png"
-            />
-          }
-        />
+          <Route path="*" element={<ErrorPage code="404" />} />
+        </Route>
 
-        <Route
-          path="/401"
-          element={
-            <ErrorPage
-              code="401"
-              description="Unauthorized. Silakan login terlebih dahulu."
-              image="/img/401.png"
-            />
-          }
-        />
-
-        <Route
-          path="/403"
-          element={
-            <ErrorPage
-              code="403"
-              description="Forbidden. Kamu tidak punya akses."
-              image="/img/403.png"
-            />
-          }
-        />
-
-        <Route
-          path="*"
-          element={
-            <ErrorPage
-              code="404"
-              description="Page not found."
-              image="/img/404.png"
-            />
-          }
-        />
-
-      </Route>
-
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }
 
